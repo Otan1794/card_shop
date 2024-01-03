@@ -1,0 +1,54 @@
+{% extends "index.html" %}
+
+{% block title %}
+    Search
+{% endblock %}
+
+{% block main %}
+<div class="search-result">
+    <div class="card-info">
+        <h2>{{ card_name }}</h2>
+        <h3>{{ card_race }} {{ card_type }}</h3>
+        <img src="{{ card_img }}" alt="{{ card_name }}" class="card-img"/></img>
+    </div>
+    <div class="card-price">
+    <table>
+        <thead>
+            <tr>
+                <th>Set</th>
+                <th>Card Number</th>
+                <th>Rarity</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in card_dataPrice %}
+            <tr>
+                <td>{{ row["set"] }}</td>
+                <td>{{ row["print_tag"] }}</td>
+                <td>{{ row["rarity"] }}</td>
+                <td>${{ row["avg_price"] }}</td>
+                <form action="/addcart" method="post">
+                    <input type="hidden" name="set" value="{{ row['set'] }}">
+                    <input type="hidden" name="print_tag" value="{{ row['print_tag'] }}">
+                    <input type="hidden" name="rarity" value="{{ row['rarity'] }}">
+                    <input type="hidden" name="avg_price" value="{{ row['avg_price'] }}">
+                    <td><select name="quantity">
+                    {% for i in range(1, 11) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                    </select></td>
+                    <td><button type="submit" class="addToCart"><ion-icon name="cart-outline"></ion-icon>ADD TO CART</button></td>
+
+                </form>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+
+
+{% endblock %}

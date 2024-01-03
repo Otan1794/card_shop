@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1, width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <title>Yu-Gi-Oh! Shop: Checkout</title>
+        <link rel="stylesheet" href="/static/styles.css">
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="checkoutLayout">
+                <div class="returnCart">
+                    <a href="/">Keep Shopping</a>
+                    <h1>List Product in Cart</h1>
+                    <div class="list">
+                        {% for row in cart_content %}
+                        <div class="item">
+
+                            <div class="info">
+                                <div class="name">{{ row["card"] }}</div><br />
+                                <div class="set">{{ row["card_set"] }}</div><br />
+                                <div class="rarity">{{ row["rarity"] }}</div><br />
+                                <div class="price">${{ (row["ppc"] * row["qty"])|round(2) }}</div>
+                            </div>
+                            <div class="quantity">Quantity: {{ row["qty"] }}</div>
+                            <div class="returnPrice"></div>
+                            <div class="image">
+                                <img src="{{ row["img_url"] }}"></img>
+                            </div>
+                        </div>
+
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="right">
+                    <h1>CHECKOUT</h1>
+                    <div class="form">
+                        <div class="group">
+                            <label for="">Full Name</label>
+                            <input type="text">
+                        </div>
+                        <div class="group">
+                            <label for="">Phone Number</label>
+                            <input type="text">
+                        </div>
+                        <div class="group">
+                            <label for="">Address</label>
+                            <input type="text">
+                        </div>
+                        <div class="group">
+                            <label for="">Country</label>
+                            <select name="" id="">
+                                <option value="">Choose..</option>
+                                <option value="london">Philippines</option>
+                            </select>
+                        </div>
+                        <div class="group">
+                            <label for="">City</label>
+                            <select name="" id="">
+                                <option value="">Choose..</option>
+                                <option value="london">Pasig City</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="return">
+                        <div class="row">
+                            <div>${{ totalPrice }}</div>
+                            <div class="totalPrice"></div>
+                        </div>
+                    </div>
+                    <button class="buttonCheckout">
+                        CHECKOUT
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script src="checkout.js"></script>
+    </body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1, width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <title>Yu-Gi-Oh! Shop: {% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="/static/styles.css">
+
+    </head>
+    <body>
+        <div class="container">
+            <header class="header">
+                <img src="/static/YGO_back.png" class="logo"></img>
+
+                <nav class="navbar">
+                    <div class="navItems">
+                        <a href="/">Home</a>
+                        <a href="#">About</a>
+                        {% if session["user_id"] %}
+                        <a class="logout" href="/logout">Logout</a>
+                        <button class="btnLogin-popup" style="display : none;">Login</button>
+                        {% else %}
+                        <button class="btnLogin-popup">Login</button>
+                        {% endif %}
+
+                        <div class="iconCart"><span class="icon">
+                            <ion-icon name="cart-outline" class="cartIcon"></ion-icon></span>
+                            <div class="totalQuantity" id="totalQty">{{ total_qty }}</div>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+        </div>
+        <div class="wrapper">
+            <span class="icon-close">
+                <ion-icon name="close"></ion-icon>
+            </span>
+            <div class="form-box login">
+                <h2>Login</h2>
+                <form action="/login" method="post">
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                        <input type="email" name="user" autocomplete="off" required>
+                        <label>Email</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                        <input type="password" name="password" required>
+                        <label>Password</label>
+                    </div>
+                    <div class="remember-forgot">
+                        <label><input type="checkbox">Remember me</label>
+                        <a href="#">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                    <div class="login-register">
+                        <p>Don't have an account?<a href="#" class="register-link"> Register</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-box register">
+                <h2>Registration</h2>
+                <form action="/register" method="post">
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="person"></ion-icon></span>
+                        <input type="text" name="user" autocomplete="off" required>
+                        <label>Username</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                        <input type="email" name="email" autocomplete="off" required>
+                        <label>Email</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                        <input type="password" name="pass" required>
+                        <label>Password</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                        <input type="password" name="repass" required>
+                        <label>Re-enter Password</label>
+                    </div>
+                    <div class="remember-forgot">
+                        <label><input type="checkbox" required>I agree to the terms & conditions</label>
+
+                    </div>
+                    <button type="submit" class="btn">Register</button>
+                    <div class="login-register">
+                        <p>Already have an account?<a href="#" class="login-link"> Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <main>
+            <form action="/search" method="post">
+                <h2>Find a Yu-Gi-Oh! Card:</h2>
+                <div class="search-box">
+                    <div class="row">
+                        <input class="search" id="input-box" autocomplete="off" name="card" type="text" required>
+
+                        <button class="search-button" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                    <div class="result-box">
+
+                    </div>
+                </div>
+            </form>
+
+        {% block main %}{% endblock %}
+        </main>
+        <div class="cart" style="right:-100%;">
+            <h2>Shopping Cart</h2>
+            <div class="listCart">
+                {% for row in cart_content %}
+                <div class="item">
+
+                    <div class="image">
+                        <img src="{{ row["img_url"] }}"></img>
+                    </div>
+                    <div class="name">
+                        {{ row["card"] }}
+                    </div>
+                    <div class="set">
+                        {{ row["card_set"] }}
+                    </div>
+                    <div class="rarity">
+                        {{ row["rarity"] }}
+                    </div>
+                    <div class="price" id="totalPrice{{ row["id"] }}">
+                        ${{ (row["ppc"] * row["qty"])|round(2) }}
+                    </div>
+                    <div class="quantity">
+                        <form action="/updatequantity" method="post">
+                        <span class="minus"><button class="decrease" name="action" value="decrease"><</button></span>
+                         <span class="value" id="quantity{{ row["id"] }}">{{ row["qty"] }}</span>
+                        <span class="plus"><button class="increase" name="action" value="increase">></button></span>
+                        <input type="hidden" name="item_id" value="{{ row['id'] }}">
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+            <div class="buttons">
+                <div class="close">CLOSE</div>
+                <div class="checkout">
+                    <a href="/checkout">
+                        CHECKOUT
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="/static/script.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    </body>
+
+</html>
